@@ -34,7 +34,10 @@ class ExerciseScreen(MDScreen):
             print("on_exercise_complete, preparing to goto_completed")
             timediff, mistakes = self.exercise.performance()
             self.manager.goto_completed(progress_inc, timediff, mistakes)
-        self.new_exercise(type(self.exercise))
+        # The listener needs a chance to close the midi port before a new one
+        # is opened in new_exercise.
+        _new_exercise = lambda dt: self.new_exercise(type(self.exercise))
+        Clock.schedule_once(_new_exercise, .025)
     
     def new_exercise(self, exercise_type=None):
         print("ExerciseScreen: new_exercise", exercise_type)
