@@ -1,0 +1,39 @@
+<IntroScreen>:
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgb: .9, .9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 4
+        cols: 1
+        size_hint: .3, .5
+        x: (self.parent.width - self.width) / 2
+        y: 2 * (self.parent.height - self.height) / 3
+        padding: [50, 50, 50, 50]
+        spacing: [0, 10]
+        MDLabel:
+            text: "Welcome to Prima Vista"
+            font_style: "H4"
+            halign: "center"
+            size_hint: 1, 1
+        MDLabel:
+            text: "a program for generating interactive sight reading exercises"
+            font_style: "H6"
+            text_size: self.width, self.height
+            halign: "center"
+            valign: "top"
+            size_hint: 1, 1
+        MDRaisedButton:
+            text: "Let's Get Started!"
+            font_style: "H6"
+            halign: "center"
+            on_release: root.goto_exercise()
+            size_hint: 1, .5
+        MDRaisedButton:
+            text: "Choose Exercise"
+            font_style: "H6"
+            halign: "center"
+            on_release: root.goto_choose()
+            size_hint: 1, .5

@@ -1,0 +1,82 @@
+<ChooseScreen>:
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgb: .9, .9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 2
+        cols: 1
+        size_hint: .9, .9
+        x: (self.parent.width - self.width) / 2
+        y: (self.parent.height - self.height) / 2
+        padding: [50, 50, 50, 50]
+        spacing: [0, 10]
+        MDLabel:
+            size_hint: 1, .5
+            halign: "center"
+            font_style: "H6"
+            text: "Please choose a sight reading exercise"
+        ScrollView:
+            MDList:
+                size_hint: 1, None
+                id: exerciselist
+
+<ExerciseListItem>:
+    MDGridLayout:
+        rows: 1
+        cols: 2
+        size: self.parent.size
+        pos: self.parent.pos
+        MDLabel:
+            id: name
+        EProgressBar:
+            id: progress
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+<ExerciseScreen>:
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgb: .9, .9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 5
+        cols: 1
+        size_hint: .9, .9
+        x: (self.parent.width - self.width) / 2
+        y: (self.parent.height - self.height) / 2
+        padding: [50, 50, 50, 50]
+        spacing: [0, 10]
+        MDLabel:
+            id: name
+            font_style: "H4"
+            halign: "center"
+            size_hint: 1, 1
+        Image:
+            id: score
+            source: "images/exercise.png"
+            allow_stretch: True
+        MDLabel:
+            id: instructions
+            font_style: "H6"
+            halign: "center"
+            size_hint: 1, 1
+        EProgressBar:
+            id: progress
+            size_hint: 1, .2
+        MDGridLayout:
+            rows: 1
+            cols: 2
+            size_hint: 1, 1
+            padding: [0, 90, 0, 0]
+            spacing: [300, 0]
+            MDRaisedButton:
+                text: "choose a different exercise"
+                on_release: root.goto_choose()
+                size_hint: 1, 1
+            MDRaisedButton:
+                text: "skip"
+                on_release: root.skip_exercise()
+                size_hint: 1, 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<CompletedScreen>:
+    MDGridLayout:
+        rows: 2
+        cols: 1
+        padding: [50, 50, 50, 50]
+        spacing: [0, 50]
+        MDGridLayout:
+            canvas.before:
+                Color:
+                    rgb: .9, .9, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            rows: 2
+            cols: 1
+            MDLabel:
+                size_hint: 1, .75
+                text: "Good Job!"
+                font_style: "H1"
+                text_size: self.width, self.height
+                halign: "center"
+                valign: "center"
+            MDLabel:
+                id: progress
+                size_hint: 1, .25
+                font_style: "H4"    
+                text_size: self.width, self.height
+                halign: "center"
+                valign: "top"
+        MDGridLayout:
+            canvas.before:
+                Color:
+                    rgb: .9, 1, .9
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            rows: 1
+            cols: 5
+            padding: [50, 50, 50, 50]
+            MDLabel:
+                text: "Mistakes:"
+                halign: "center"
+            MDLabel:
+                id: mistakes
+                halign: "right"
+            MDLabel:
+                text: ""
+            MDLabel:
+                text: "Completion Time:"
+                halign: "center"
+            MDLabel:
+                id: time
+                halign: "right"
+    

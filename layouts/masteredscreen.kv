@@ -1,0 +1,40 @@
+<MasteredScreen>:
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgb: .9, .9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 5
+        cols: 1
+        size_hint: .3, .6
+        x: (self.parent.width - self.width) / 2
+        y: (self.parent.height - self.height) / 2
+        padding: [50, 50, 50, 50]
+        spacing: [0, 10]
+        MDLabel:
+            text: "Congratulations!"
+            size_hint: 1, 1
+            font_style: "H4"    
+            text_size: self.width, self.height
+            halign: "center"
+            valign: "center"
+        MDLabel:
+            text: "You've mastered this exercise"
+            size_hint: 1, 1    
+            text_size: self.width, self.height
+            halign: "center"
+            valign: "top"
+        MDRaisedButton:
+            text: "Start Next Exercise!"
+            size_hint: 1, .5
+            on_release: root.next_exercise()
+        MDRaisedButton:
+            text: "Keep Practicing"
+            size_hint: 1, .5
+            on_release: root.continue_exercise()
+        MDRaisedButton:
+            on_release: root.choose_exercise()
+            size_hint: 1, .5
+            text: "Choose New Exercise"
