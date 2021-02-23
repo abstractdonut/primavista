@@ -34,6 +34,8 @@ class ExerciseBase():
         self.finished = False
     
     def stop(self):
+        if not hasattr(self, 'finished'):
+            self.finished = False
         if not self.finished:
             self.stoptime = time()
             self.listener.stop()

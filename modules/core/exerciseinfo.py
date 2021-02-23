@@ -1,7 +1,7 @@
 from modules.core.exercise import *
 
 import pickle
-from pathlib import Path
+import os
 
 
 # Here is a list of every sight reading exercise and its corresponding name and instructions
@@ -20,8 +20,10 @@ from pathlib import Path
 #}
 
 def save_exercise_info():
-    #Path("data/progress.pickle").touch(exist_ok=True)
-    with open("data/progress.pickle", 'w+b') as handle:
+    filename = "data/progress.pickle"
+    if not os.path.exists(filename):
+        open(filename, 'w').close()
+    with open(filename, 'w+b') as handle:
         pickle.dump(exercise_info, handle)
 
 def load_exercise_info():
