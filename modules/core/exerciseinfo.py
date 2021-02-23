@@ -6,21 +6,8 @@ import os
 
 # Here is a list of every sight reading exercise and its corresponding name and instructions
 
-#{
-#    Exercise1A: ("Key Signatures I", "Play the root note of the given major key."),
-#    Exercise1B: ("Key Signatures II", "Play the root note of the given major key."),
-#    Exercise1C: ("Key Signatures III", "Play the root note of the given minor key."),
-#    Exercise1D: ("Key Signatures IV", "Play the root note of the given minor key."),
-#    Exercise2A: ("C major - right hand", "Play the given note."),
-#    Exercise2B: ("C major - left hand", "Play the given note."),
-#    Exercise3A: ("Perfect fifths - right hand", "Play the given interval."),
-#    Exercise3B: ("Perfect fifths - left hand", "Play the given interval."),
-#    Exercise4A: ("Pentascales - right hand", "Play the pentascale for the given key."),
-#    Exercise4B: ("Pentascales - left hand", "Play the pentascale for the given key.")
-#}
-
 def save_exercise_info():
-    with open(filename, 'w+b') as handle:
+    with open("data/progress.pickle", 'w+b') as handle:
         pickle.dump(exercise_info, handle)
 
 def load_exercise_info():

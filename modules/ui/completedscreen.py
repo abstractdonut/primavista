@@ -6,8 +6,7 @@ from modules.core.exerciseinfo import exercise_info
 class CompletedScreen(MDScreen):
     
     def on_enter(self):
-        pass
-        #Clock.schedule_once(self.goto_exercise, 1)
+        Clock.schedule_once(self.goto_exercise, 1)
     
     def set_exercise_values(self, progress, timediff, mistakes):
         self.ids['progress'].text = "You earned %.2f progress points" % progress
