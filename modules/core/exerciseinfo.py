@@ -20,9 +20,6 @@ import os
 #}
 
 def save_exercise_info():
-    filename = "data/progress.pickle"
-    if not os.path.exists(filename):
-        open(filename, 'w').close()
     with open(filename, 'w+b') as handle:
         pickle.dump(exercise_info, handle)
 
