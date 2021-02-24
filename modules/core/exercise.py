@@ -67,6 +67,12 @@ class ExerciseBase():
     # https://stackoverflow.com/questions/3847386/how-to-test-if-a-list-contains-another-list
     @staticmethod
     def contains(big, small):
+        for item in big:
+            if type(item) == list or type(item) == tuple:
+                item.sort()
+        for item in small:
+            if type(item) == list or type(item) == tuple:
+                item.sort()
         for i in range(len(big)-len(small)+1):
             for j in range(len(small)):
                 if big[i+j] != small[j]:
@@ -125,15 +131,23 @@ class ExerciseBase():
     }
     def get_notes(self):
         notes = []
-        for midinum in self.targetseq:
-            note, octave = midinum_to_note(midinum).split('-')
-            print("midinum", midinum)
-            print("pre note and octave", note, octave)
-            note = note.replace('#', 'is').replace('b', 'es').lower()
-            octave = type(self).ly_octaves[int(octave)]
-            notes.append(note + octave)
-            print("post note and octave\n", note, octave)
+        print("get_notes: self.targetseq =", self.targetseq)
+        for item in self.targetseq:
+            if type(item) == list or type(item) == tuple:
+                notes.append("<")
+                for midinum in item:
+                    notes.append(self.midinum_to_ly(midinum))
+                notes.append(">")
+            else:
+                notes.append(self.midinum_to_ly(item))
         return " ".join(notes) + " "
+    
+    # Converts a midi note number to a lilypond style note.
+    def midinum_to_ly(self, midinum):
+        note, octave = midinum_to_note(midinum).split('-')
+        note = note.replace('#', 'is').replace('b', 'es').lower()
+        octave = type(self).ly_octaves[int(octave)]
+        return note + octave
     
     # Modified version of
     # mingus.extra.lilypond.Exercise.save_string_and_execute_LilyPond
