@@ -11,6 +11,7 @@ from modules.ui.exercisescreen import ExerciseScreen
 from modules.ui.completedscreen import CompletedScreen
 from modules.ui.masteredscreen import MasteredScreen
 from modules.core.exerciseinfo import *
+from modules.core.listener import listener
 
 import mido
 import threading
@@ -127,7 +128,11 @@ class PrimaVistaApp(MDApp):
     def build(self):
         return PrimaVistaUI()
     
+    def on_start(self):
+        listener.connect()
+    
     def on_stop(self):
+        listener.disconnect()
         save_exercise_info()
 
 

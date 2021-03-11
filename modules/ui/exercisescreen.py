@@ -14,7 +14,7 @@ class ExerciseScreen(MDScreen):
         self.exercise = None
     
     def on_pre_enter(self):
-        print("ExerciseScreen: on_pre_enter")
+        #print("ExerciseScreen: on_pre_enter")
         if self.exercise is None:
             self.new_exercise()
     
@@ -31,7 +31,7 @@ class ExerciseScreen(MDScreen):
         if old_progress < 100 and new_progress >= 100:
             self.manager.goto_mastered()
         else:
-            print("on_exercise_complete, preparing to goto_completed")
+            #print("on_exercise_complete, preparing to goto_completed")
             timediff, mistakes = self.exercise.performance()
             self.manager.goto_completed(progress_inc, timediff, mistakes)
         # The listener needs a chance to close the midi port before a new one
@@ -40,11 +40,11 @@ class ExerciseScreen(MDScreen):
         Clock.schedule_once(_new_exercise, .05)
     
     def new_exercise(self, exercise_type=None):
-        print("ExerciseScreen: new_exercise", exercise_type)
+        #print("ExerciseScreen: new_exercise", exercise_type)
         if exercise_type is None:
             exercise_type = self.get_unmastered_exercise()
         if not self.exercise is None:
-            print("Stoping completed exercise")
+            #print("Stoping completed exercise")
             self.exercise.stop()
         name, instr, progress = exercise_info[exercise_type]
         self.ids['name'].text = name

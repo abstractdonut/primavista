@@ -7,7 +7,7 @@ from mingus.containers.composition import Composition
 from mingus.extra.lilypond import *
 
 from modules.core.util import *
-from modules.core.listener import *
+from modules.core.listener import listener
 from modules.core.noteset import *
 
 from PIL import Image
@@ -23,25 +23,32 @@ class ExerciseBase():
     # (callback, listener, userseq, targetseq, clef, and key)
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.targetseq = [52, 54, 56, 57, 59]
         self.clef = "bass"
         self.key = 4
     
     def start(self):
+        listener.clear()
+        listener.start()
+        print("adding exercise callback", self.listener_callback)
+        listener.add_callback(self.listener_callback)
         self.starttime = time()
-        self.finished = False
+        self.active = True
     
     def stop(self):
-        if not hasattr(self, 'finished'):
-            self.finished = False
-        if not self.finished:
+        if not hasattr(self, 'active'):
+            raise RuntimeError("call to self.stop was made before self.start.")
+        elif self.active:
+            listener.stop()
+            print("removing exercise callback", self.listener_callback)
+            listener.remove_callback(self.listener_callback)
             self.stoptime = time()
-            self.listener.stop()
-            self.finished = True
+            self.active = False
     
     def listener_callback(self, noteseq):
+        print("user:", noteseq)
+        print("target:", self.targetseq)
         self.userseq = noteseq
         complete = self.check()
         if complete:
@@ -53,16 +60,20 @@ class ExerciseBase():
     def check(self):
         return type(self).contains(self.userseq, self.targetseq)
     
+    # raise an error if the exercise has not been completed. performance must
+    # call this method before doing anything else.
+    def assert_complete(self):
+        if not hasattr(self, "starttime") or not hasattr(self, "stoptime"):
+            raise RuntimeError("self.performance cannot be called before self.start and self.stop have been called once.")
+    
     # return a tuple (time, mistakes) where time is the time in seconds in which
     # the exercise was complete, and mistakes counts the number of notes in
     # userseq which did not contribute to completing the exercise.
     def performance(self):
-        if self.finished:
-            timediff = self.stoptime - self.starttime
-            mistakes = len(self.userseq) - len(self.targetseq)
-            return (timediff, mistakes)
-        else:
-            raise RuntimeError("Exercise.performance cannot calculate performance before exercise is finished.")
+        self.assert_complete()
+        timediff = self.stoptime - self.starttime
+        mistakes = len(self.userseq) - len(self.targetseq)
+        return (timediff, mistakes)
     
     # https://stackoverflow.com/questions/3847386/how-to-test-if-a-list-contains-another-list
     @staticmethod
@@ -108,7 +119,7 @@ class ExerciseBase():
         clef = "\\clef " + self.clef + " "
         key = self.get_key()
         notes = self.get_notes()
-        print("{ " + key + clef + notes + "}")
+        #print("{ " + key + clef + notes + "}")
         return header + "{ " + key + clef + "{ " + notes + "}" + " }"
     
     def get_key(self):
@@ -131,7 +142,7 @@ class ExerciseBase():
     }
     def get_notes(self):
         notes = []
-        print("get_notes: self.targetseq =", self.targetseq)
+        #print("get_notes: self.targetseq =", self.targetseq)
         for item in self.targetseq:
             if type(item) == list or type(item) == tuple:
                 notes.append("<")
@@ -165,7 +176,7 @@ class ExerciseBase():
         except:
             return False
         command = 'lilypond %s -dresolution=600 -o "%s" "%s.ly"' % (command, filename, filename)
-        print("Executing: %s" % command)
+        #print("Executing: %s" % command)
         p = subprocess.Popen(command, shell=True).wait()
         os.remove(filename + ".ly")
         return True
@@ -215,7 +226,7 @@ class ExerciseBase():
         dom = notes.int_to_note((tonic + 7) % 12)
         tonic = notes.int_to_note(tonic)
         noteset = NoteSet(notes=[tonic, subdom, dom], inclef=clef)
-        print(noteset)
+        #print(noteset)
         root = noteset.random()
         return [root, root + 4, root + 7]
         
@@ -295,7 +306,6 @@ class Exercise1A(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.targetseq = []
         self.clef = "treble"
@@ -311,10 +321,10 @@ class Exercise1A(ExerciseBase):
         return self.key in self.userseq
    
     def performance(self):
-        if self.finished:
-            timediff = self.stoptime - self.starttime
-            mistakes = len(self.userseq) - 1
-            return (timediff, mistakes)
+        self.assert_complete()
+        timediff = self.stoptime - self.starttime
+        mistakes = len(self.userseq) - 1
+        return (timediff, mistakes)
     
     def get_key(self):
         return "\\key %s \\major " % self.lykey
@@ -346,7 +356,6 @@ class Exercise1B(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.targetseq = []
         self.clef = "bass"
@@ -362,10 +371,10 @@ class Exercise1B(ExerciseBase):
         return self.key in self.userseq
    
     def performance(self):
-        if self.finished:
-            timediff = self.stoptime - self.starttime
-            mistakes = len(self.userseq) - 1
-            return (timediff, mistakes)
+        self.assert_complete()
+        timediff = self.stoptime - self.starttime
+        mistakes = len(self.userseq) - 1
+        return (timediff, mistakes)
     
     def get_key(self):
         return "\\key %s \\major " % self.lykey
@@ -397,7 +406,6 @@ class Exercise1C(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.targetseq = []
         self.clef = "treble"
@@ -413,10 +421,10 @@ class Exercise1C(ExerciseBase):
         return self.key in self.userseq
    
     def performance(self):
-        if self.finished:
-            timediff = self.stoptime - self.starttime
-            mistakes = len(self.userseq) - 1
-            return (timediff, mistakes)
+        self.assert_complete()
+        timediff = self.stoptime - self.starttime
+        mistakes = len(self.userseq) - 1
+        return (timediff, mistakes)
     
     def get_key(self):
         return "\\key %s \\minor " % self.lykey
@@ -448,7 +456,6 @@ class Exercise1D(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.targetseq = []
         self.clef = "bass"
@@ -464,10 +471,10 @@ class Exercise1D(ExerciseBase):
         return self.key in self.userseq
    
     def performance(self):
-        if self.finished:
-            timediff = self.stoptime - self.starttime
-            mistakes = len(self.userseq) - 1
-            return (timediff, mistakes)
+        self.assert_complete()
+        timediff = self.stoptime - self.starttime
+        mistakes = len(self.userseq) - 1
+        return (timediff, mistakes)
     
     def get_key(self):
         return "\\key %s \\minor " % self.lykey
@@ -475,11 +482,10 @@ class Exercise1D(ExerciseBase):
 class Exercise2A(ExerciseBase): 
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         tones = scales.Ionian("C").ascending()[0:7]
         noteset = NoteSet(notes=tones, inclef="treble")
-        print("noteset:", noteset)
+        #print("noteset:", noteset)
         self.targetseq = [noteset.random()]
         self.clef = "treble"
         self.key = 0
@@ -487,11 +493,10 @@ class Exercise2A(ExerciseBase):
 class Exercise2B(ExerciseBase): 
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         tones = scales.Ionian("C").ascending()[0:7]
         noteset = NoteSet(notes=tones, inclef="bass")
-        print("noteset:", noteset)
+        #print("noteset:", noteset)
         self.targetseq = [noteset.random()]
         self.clef = "bass"
         self.key = 0
@@ -499,11 +504,10 @@ class Exercise2B(ExerciseBase):
 class Exercise3A(ExerciseBase): 
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         tones = scales.Ionian("C").ascending()[0:7]
         noteset = NoteSet(notes=tones, inclef="treble")
-        print("noteset:", noteset)
+        #print("noteset:", noteset)
         root = noteset.random()
         self.targetseq = [[root, root + 7]]
         self.clef = "treble"
@@ -512,11 +516,10 @@ class Exercise3A(ExerciseBase):
 class Exercise3B(ExerciseBase): 
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         tones = scales.Ionian("C").ascending()[0:7]
         noteset = NoteSet(notes=tones, inclef="bass")
-        print("noteset:", noteset)
+        #print("noteset:", noteset)
         root = noteset.random()
         self.targetseq = [[root, root + 7]]
         self.clef = "bass"
@@ -534,7 +537,6 @@ class Exercise4A(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.clef = "treble"
         self.lykey, self.key = choice(type(self).key_choices)
@@ -555,7 +557,6 @@ class Exercise4B(ExerciseBase):
     ]
     def __init__(self, callback):
         self.callback = callback
-        self.listener = Listener(self.listener_callback)
         self.userseq = []
         self.clef = "bass"
         self.lykey, self.key = choice(type(self).key_choices)
